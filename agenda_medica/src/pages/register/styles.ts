@@ -1,4 +1,5 @@
 import { Dimensions, StyleSheet } from 'react-native';
+import { BottomTabs } from 'react-native-screens';
 
 export const style = StyleSheet.create({
     container:{
@@ -39,14 +40,11 @@ export const style = StyleSheet.create({
     },
     textInput:{
         width: '90%',
+        height: 50,
         borderWidth: 1,
         borderRadius: 15,
         margin: 5,
-        height: 50,
         paddingLeft: 10,
-    },
-    nossaLogo:{
-        paddingBottom: 50
     },
     buttonLogin:{
         width: 100,
@@ -62,7 +60,11 @@ export const style = StyleSheet.create({
     },
     buttonMarign:{
         paddingTop: 15
+    },
+    textIputAlign:{
+        marginBottom: 30
     }
+
     
 })
 
