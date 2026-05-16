@@ -4,7 +4,7 @@ import Login from './src/pages/login';
 import Cadastro from './src/pages/register';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import Home from './src/pages/Home';
+import TabRoutes from './src/navigation/tab';
 
 const Stack = createNativeStackNavigator();
 export default function App() {
@@ -23,7 +23,7 @@ export default function App() {
 
         <Stack.Screen
         name="Home"
-        component={Home}
+        component={TabRoutes}
         />
         </Stack.Navigator>
         </NavigationContainer>
