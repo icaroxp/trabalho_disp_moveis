@@ -1,7 +1,8 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Home from '../pages/Home'
-import Medicamentos from "../pages/medicamentos";
 import Alertas from "../pages/alertas";
+import { Ionicons } from "@expo/vector-icons";
+import CadastroMedicamentos from "../pages/cadastroProdutos";
 
 const Tab = createBottomTabNavigator();
 export default function TabRoutes(){
@@ -21,28 +22,65 @@ export default function TabRoutes(){
 
         tabBarLabelStyle: {
             fontSize: 12,
+
+            backgroundColor:'000'
+        
         },
 
         tabBarItemStyle: {
             justifyContent: 'center',
             alignItems: 'center',
-        }
+        },
+        
 
-    }}>
+
+
+
+
+    }}>     
+    {/* Barra de navegação */}
+
             <Tab.Screen
             name="Home"
             component={Home}
+            options={{
+                //adiçao de icone na barra de navegação
+                tabBarIcon: ({color, size}) => ( 
+                    <Ionicons
+                    name="home"
+                    size={size}
+                    color={color}
+
+                    />
+                )
+            }}
             />
-
-
             <Tab.Screen
-            name="Medicamentos"
-            component={Medicamentos}
-            />
+            name="Cadastro"
+            component={CadastroMedicamentos}
+            options={{
+                tabBarIcon: ({color, size}) => ( 
+                    <Ionicons
+                    name="pencil"
+                    size={size}
+                    color={color}
 
+                    />
+                )
+            }}
+            />
             <Tab.Screen
             name="Alertas"
             component={Alertas}
+            options={{
+                tabBarIcon: ({color, size}) => (
+                <Ionicons
+                name="alert"
+                size={size}
+                color={color}
+                />
+                )
+            }}
             />
 
             

@@ -4,7 +4,7 @@ export default function Medicamentos(){
     return(
         <View>
             <Text>
-                Medicamentos
+                Alertas
             </Text>
         </View>
     )
