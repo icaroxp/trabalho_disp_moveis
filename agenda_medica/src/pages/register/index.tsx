@@ -1,19 +1,45 @@
 import { View, Text} from 'react-native'
 import React, { useState } from "react"; //importando funçoes da biblioteca react
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '../../services/firebaseConfig';
 
 import { 
     Image,
     TextInput,
-    Pressable,
     TouchableOpacity
 }   from 'react-native';//Importando componentes do react native
 
 import {style} from "./styles"; //Importando os estilos da pasta .style
-import Logo from '../../assets/Logo.jpg' //Importando nossa foto de logo da tela de login
+// import Logo from '../../assets/Logo.jpg' //Importando nossa foto de logo da tela de login
 export default function Cadastro(){
     const [ email, setEmail] = useState('');
     const [ senha, setSenha] = useState('');
     const [ confirmaSenha, setConfirmaSenha] = useState('');
+
+    async function cadastrarUsuario(){
+        if(senha !== confirmaSenha){
+            alert('As senhas são diferentes!');
+            return
+        }
+        try{
+            const user = await createUserWithEmailAndPassword(
+                auth, email, senha
+            );
+            alert('Cadastro realizado');
+            console.log(user)
+        }
+
+        catch(error:any){
+            if(error.code === 'auth/weak-password'){
+                alert('A senha precisa ter pelo menos 6 caracteres!')
+            }
+            else{
+                alert('Erro ao cadastrar')
+            }
+            // console.log(error);
+            // alert(error.message);
+        }
+    }
     return( 
     <View style ={style.container}> 
         <View style={style.boxTop}>
@@ -37,14 +63,7 @@ export default function Cadastro(){
             <View style={style.buttonMarign}>
             <View style={style.buttonLogin}>
                 <TouchableOpacity 
-                onPress={() => 
-                {
-                    if(senha !== confirmaSenha){
-                    alert('As senhas são diferentes!');
-                    return;
-                    }
-                alert('Cadastro Realizado')
-                }}
+                    onPress={cadastrarUsuario}
                 >
                 
                 <Text>Registrar</Text>

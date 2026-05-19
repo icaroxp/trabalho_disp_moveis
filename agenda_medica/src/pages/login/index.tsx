@@ -11,13 +11,42 @@ import {
 
 import {style} from "./styles"; //Importando os estilos da pasta .style
 import Logo from '../../assets/Logo.jpg' //Importando nossa foto de logo da tela de login
+import { signInWithEmailAndPassword } from "firebase/auth";
+import {auth} from '../../services/firebaseConfig'
 
 //Aqui estamos criando o componente de login
 export default function Login({ navigation}: any){ 
     // variáveis criadas para que possamos guardar informações de login:
     const [email, setEmail] = useState(''); 
     const [senha, setSenha] = useState('');
-    return( //retornando valor para minha função
+    //criando uma função assincrona (que espera retorno das operaçoes)
+    async function logarUsuario(){ 
+        try{
+            //Criação da função usuario que espera o firebase dar retorno as variaveis
+            const user = await signInWithEmailAndPassword( 
+                auth, email, senha
+            );
+            alert('Login realizado!')
+            console.log(user);
+            navigation.navigate('Home')
+        }
+        //tratamento de erro de login
+        catch(error:any){
+            if(error.code === 'auth/invalid-credential'){
+                alert('Email ou senha incorretos, verifique-os e faça login novamente')
+            }
+        else if(error.code === 'auth/invalid-email'){
+            alert('email inválido, faça o registro!')
+        }
+        else{
+            alert('Erro ao fazer login')
+        }
+            // console.log(error);
+            // alert(error.message);
+
+        }
+    }
+    return( 
 
         <View style ={style.container}> 
             <View style={style.boxTop}>
@@ -31,8 +60,9 @@ export default function Login({ navigation}: any){
                 <TextInput value={senha} onChangeText={setSenha} secureTextEntry={true} style={style.textInput}/>
                 <View style={style.buttonMarign}>
                     <View style={style.buttonLogin}>
+                    {/* Quando o botão for apertado, a minha função é chamada e faz o envio das informações ao firebase */}
                     <TouchableOpacity
-                    onPress={() => navigation.navigate('Home')}
+                    onPress={logarUsuario} 
                     > 
                     <Text>Entrar</Text>
                     </TouchableOpacity>
