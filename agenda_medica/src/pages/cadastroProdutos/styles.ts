@@ -31,5 +31,11 @@ export const style = StyleSheet.create({
     textNomeRemedio:{
 
     },
-    textHorario:{}
+    textHorario:{},
+    mostrarHorario:{
+        backgroundColor:'white',
+        borderRadius: 10,
+        marginTop: 10,
+        alignItems: 'center'
+    }
 })

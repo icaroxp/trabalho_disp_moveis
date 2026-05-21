@@ -1,25 +1,56 @@
 import { View, Text, TextInput, Touchable, TouchableOpacity, FlatList, TextInputComponent} from 'react-native';
 import {style} from "./styles";
 import React, {useState} from 'react';
+import {db, auth} from '../../services/firebaseConfig'
+import { collection, addDoc } from 'firebase/firestore';
+import DateTimePicker from '@react-native-community/datetimepicker';
+
+
 
 
 export default function CadastroMedicamentos(){
     
     const [ nome, setNome] = useState('');
-    const [horario, setHorario] = useState('');
-    //useState<any[]>([]) == Medicamento pode guardar qualquer tipo de valor dentro da lista
-    const [medicamentos, setMedicamentos] = useState<any[]>([]); 
+    const [horario, setHorario] = useState(new Date());
+    const [mostrarHorario, setMostrarHorario] = useState(false)
+    
+    //A função criada abaixo tem o objetivo que criar um campo de seleção de data
+    function selecionarHorario(event:any, selectedDate:any){ 
 
-    function adicionarMedicamento(){
-        const novoMedicamento={
-            id: Date.now(),
-            nome: nome,
-            horario: horario,
-        }
-        setMedicamentos([...medicamentos, novoMedicamento])
+    //usuario seleciona uma hora e ele é salvo na constante, caso ele cancele o horario antigo permanece
+    const currentDate = selectedDate || horario;
+    setMostrarHorario(false)
+    setHorario(currentDate)
+}
+
+    async function adicionarMedicamento() {
+    try{
+        const user = auth.currentUser;
+
+        await addDoc(
+            //criação da coleção medicamentos e faz o cadastro das informações dentro do firebase
+            collection(db,'medicamentos'),
+            {
+                nome: nome,
+                horario: horario.toLocaleTimeString([], {
+                hour: '2-digit',
+                minute: '2-digit'
+            }),
+                userId:user?.uid
+            }
+        );
+        alert('Medicamento cadastrado')
+        //Limpa o campo novamente
         setNome('');
-        setHorario('');
+        setHorario(new Date());
     }
+    catch(error:any){
+        console.log(error);
+        // alert(error.message)
+        alert('Erro ao cadastrar medicamentos')
+
+    }
+}
 
 
     return(
@@ -36,17 +67,39 @@ export default function CadastroMedicamentos(){
             <Text style={style.textHorario}>
                 Horário
             </Text>
-            <TextInput
-            value={horario}
-            onChangeText={setHorario}
-            placeholder='12:00'
-            style={style.input}
-            />
+{/* */}
+<TouchableOpacity
+    style={style.input}
+    onPress={() => setMostrarHorario(true)}
+>
+    <Text>
+
+        {horario.toLocaleTimeString([], {
+            hour: '2-digit',
+            minute: '2-digit'
+        })}
+
+    </Text>
+
+</TouchableOpacity>
+
+{mostrarHorario && ( 
+    <View style={style.mostrarHorario}>
+    <DateTimePicker
+        value={horario}
+        mode="time"
+        is24Hour={true}
+        display="spinner"
+        onChange={selecionarHorario}
+    />
+    </View>
+
+)}
 
             <View style={style.buttonMarign}>
                 <View style={style.buttonLogin}>
                 <TouchableOpacity
-                    onPress={() => navigation.navigate('Home')}
+                    onPress={adicionarMedicamento}
                     > 
                     <Text style={style.buttonInput}>Cadastrar</Text>
                 </TouchableOpacity>
