@@ -2,7 +2,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Home from '../pages/Home'
 import Alertas from "../pages/alertas";
 import { Ionicons } from "@expo/vector-icons";
-import CadastroMedicamentos from "../pages/cadastroProdutos";
+import CadastroMedicamentos from "../pages/cadastroMedicamentos";
 
 const Tab = createBottomTabNavigator();
 export default function TabRoutes(){
