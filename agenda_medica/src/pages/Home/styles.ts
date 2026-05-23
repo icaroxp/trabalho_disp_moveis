@@ -23,6 +23,19 @@ nomeMed:{
 horarioMed:{
     fontSize:16,
     marginTop:5
+},
+botaoReload:{
+backgroundColor: 'black',
+padding: 10,
+borderRadius: 10,
+marginBottom:15,
+alignItems: 'center'
+},
+textoReload:{
+color:'white',
+fontWeight:'bold',
+fontSize: 15,
+marginTop:10
 }
 
 })
