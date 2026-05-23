@@ -1,37 +1,77 @@
-import { View, Text, FlatList, Alert, Touchable, TouchableOpacity } from 'react-native';
+import { View, Text, FlatList, Alert, TouchableOpacity } from 'react-native';
 import {style} from "./styles";
 import React, {useState, useEffect} from 'react';
 import{ collection, doc, getDocs, query, where, updateDoc, deleteDoc} from 'firebase/firestore';
 import { db, auth} from '../../services/firebaseConfig'
+import * as Notifications from 'expo-notifications';
+Notifications.setNotificationHandler({
+    handleNotification: async () => ({
+        shouldShowBanner: true,
+        shouldShowList: true,
+        shouldPlaySound: true,
+        shouldSetBadge: false,
+    }),
+});
 export default function Home(){
 
 const [medicamentos, setMedicamentos] = useState<any[]>([]);
 const [ultimoAlerta, setUltimoAlerta] = useState('');
 async function buscarMedicamentos() {
     try{
-        //pega o usuario logado e coloca na constante user
-        const usuario = auth.currentUser
-        //busca os medicamentos do usuario logado
-        const medUsuario = query(
-            collection(db, 'medicamentos'),
-            where('userId', '==', usuario?.uid)
-        );
-        const querySnapshot = await getDocs(medUsuario)
-        //Esse array vazio é quem vai receber os medicamentos
-        const listaMedicamentos:any[]= [];
 
-        querySnapshot.forEach((doc) => {
-            listaMedicamentos.push({
-                id: doc.id, ...doc.data()
+            const usuario = auth.currentUser;
+
+            const listaMedicamentos:any[] = [];
+
+            // MEDICAMENTOS DO PRÓPRIO USUÁRIO
+
+            const meusMedicamentos = query(
+                collection(db, 'medicamentos'),
+                where('userId', '==', usuario?.uid)
+            );
+
+            const meusDocs = await getDocs(meusMedicamentos);
+
+            meusDocs.forEach((doc) => {
+
+                listaMedicamentos.push({
+                    id: doc.id,
+                    ...doc.data()
+                });
+
             });
-        });
-        setMedicamentos(listaMedicamentos);
 
+            // PACIENTES VINCULADOS
+
+            const cuidadoresQuery = query(
+                collection(db, 'cuidadores'),
+                where('cuidadorId', '==', usuario?.uid)
+            );
+            const cuidadoresDocs = await getDocs(cuidadoresQuery);
+            for(const cuidadorDoc of cuidadoresDocs.docs){
+                const dadosCuidador:any = cuidadorDoc.data();
+                const medicamentosPaciente = query(
+                    collection(db, 'medicamentos'),
+                    where('userEmail', '==', dadosCuidador.pacienteEmail)
+                );
+                const medsPacienteDocs = await getDocs(medicamentosPaciente);
+                medsPacienteDocs.forEach((doc) => {
+
+                    listaMedicamentos.push({
+                        id: doc.id,
+                        ...doc.data()
+                    });
+
+                });
+
+            }
+            setMedicamentos(listaMedicamentos);
+        }
+        catch(error){
+            console.log(error);
+        }
     }
-    catch(error){
-        console.log(error);
-    }
-}
+
 async function excluirMed(id:string){
 
     try{
@@ -99,7 +139,7 @@ async function editarMed(
 useEffect(() => {
 
     buscarMedicamentos();
-
+    Notifications.requestPermissionsAsync();
 }, []);
 
 useEffect(() => {
@@ -115,7 +155,7 @@ useEffect(() => {
 }, [medicamentos, ultimoAlerta]);
 
 
-function verificarHorario(){
+async function verificarHorario(){
 
     const agora = new Date();
 
@@ -126,6 +166,29 @@ function verificarHorario(){
         hour12: false
 
     });
+
+    console.log('Hora atual:', horaAtual);
+
+    for (const med of medicamentos) {
+        console.log('Medicamento:', med.horario);
+        if(
+            med.horario === horaAtual &&
+            ultimoAlerta !== `${med.id}-${horaAtual}`
+        ){
+            setUltimoAlerta(`${med.id}-${horaAtual}`);
+            await Notifications.scheduleNotificationAsync({
+                content: {
+                    title: 'Hora do remédio 💊',
+                    body: `Está na hora de tomar ${med.nome}`,
+                    sound: true,
+                        },
+                trigger: {
+                    type: Notifications.SchedulableTriggerInputTypes.TIME_INTERVAL,
+                    seconds: 1,
+                        },
+                });
+            }
+        }
 }
     return(
         <View style={style.container}>

@@ -3,6 +3,7 @@ import Home from '../pages/Home'
 import Alertas from "../pages/alertas";
 import { Ionicons } from "@expo/vector-icons";
 import CadastroMedicamentos from "../pages/cadastroMedicamentos";
+import CadastroCuidador from '../pages/integrarCuidador'
 
 const Tab = createBottomTabNavigator();
 export default function TabRoutes(){
@@ -15,18 +16,14 @@ export default function TabRoutes(){
             backgroundColor: '#000',
             height: 70,
         },
-
         tabBarActiveTintColor: '#fff',
 
         tabBarInactiveTintColor: '#999',
-
         tabBarLabelStyle: {
             fontSize: 12,
 
             backgroundColor:'000'
-        
         },
-
         tabBarItemStyle: {
             justifyContent: 'center',
             alignItems: 'center',
@@ -82,6 +79,12 @@ export default function TabRoutes(){
                 )
             }}
             />
+            <Tab.Screen
+            name="CadastroCuidador"
+            component={CadastroCuidador}
+            />
+
+            
 
             
 

@@ -1,4 +1,4 @@
-import { View, Text, TextInput, Touchable, TouchableOpacity, FlatList, TextInputComponent} from 'react-native';
+import { View, Text, TextInput, TouchableOpacity} from 'react-native';
 import {style} from "./styles";
 import React, {useState} from 'react';
 import {db, auth} from '../../services/firebaseConfig'
@@ -36,7 +36,8 @@ export default function CadastroMedicamentos(){
                 hour: '2-digit',
                 minute: '2-digit'
             }),
-                userId:user?.uid
+                userId:user?.uid,
+                userEmail:user?.email
             }
         );
         alert('Medicamento cadastrado')
