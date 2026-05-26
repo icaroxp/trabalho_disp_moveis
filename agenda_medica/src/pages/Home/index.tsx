@@ -4,6 +4,8 @@ import React, {useState, useEffect} from 'react';
 import{ collection, doc, getDocs, query, where, updateDoc, deleteDoc} from 'firebase/firestore';
 import { db, auth} from '../../services/firebaseConfig'
 import * as Notifications from 'expo-notifications';
+import { useNavigation } from '@react-navigation/native'
+
 Notifications.setNotificationHandler({
     handleNotification: async () => ({
         shouldShowBanner: true,
@@ -12,19 +14,18 @@ Notifications.setNotificationHandler({
         shouldSetBadge: false,
     }),
 });
-export default function Home(){
 
+export default function Home(){
+const navigation:any = useNavigation();
 const [medicamentos, setMedicamentos] = useState<any[]>([]);
 const [ultimoAlerta, setUltimoAlerta] = useState('');
 async function buscarMedicamentos() {
     try{
 
             const usuario = auth.currentUser;
-
             const listaMedicamentos:any[] = [];
 
             // MEDICAMENTOS DO PRÓPRIO USUÁRIO
-
             const meusMedicamentos = query(
                 collection(db, 'medicamentos'),
                 where('userId', '==', usuario?.uid)
@@ -88,53 +89,7 @@ async function excluirMed(id:string){
     }
 }
 
-async function editarMed(
-    id:string,
-    nomeAtual:string,
-    horarioAtual:string
-){
 
-    Alert.prompt(
-
-        'Editar nome',
-        'Digite o novo nome',
-
-        (novoNome) => {
-
-            if(!novoNome) return;
-
-            Alert.prompt(
-
-                'Editar horário',
-                'Digite o novo horário',
-
-            async (novoHorario) => {
-                if(!novoHorario) return;
-
-                try{
-
-                    await updateDoc(
-                            doc(db, 'medicamentos', id),
-                            {
-                                nome: novoNome,
-                                horario: novoHorario
-                            }
-                    );
-                        alert('Medicamento editado!');
-                        buscarMedicamentos();
-                    }
-                    catch(error){
-                        console.log(error);
-                    }
-                },
-                'plain-text',
-                horarioAtual
-            );
-        },
-        'plain-text',
-        nomeAtual
-    );
-}
 
 useEffect(() => {
 
@@ -145,15 +100,10 @@ useEffect(() => {
 useEffect(() => {
 
     const intervalo = setInterval(() => {
-
         verificarHorario();
-
     }, 1000);
-
     return () => clearInterval(intervalo);
-
 }, [medicamentos, ultimoAlerta]);
-
 
 async function verificarHorario(){
 
@@ -164,9 +114,7 @@ async function verificarHorario(){
         hour: '2-digit',
         minute: '2-digit',
         hour12: false
-
     });
-
     console.log('Hora atual:', horaAtual);
 
     for (const med of medicamentos) {
@@ -201,13 +149,10 @@ async function verificarHorario(){
             style={style.botaoReload}
             onPress={buscarMedicamentos}
         >
-
             <Text style={style.textoReload}>
                 🔄 Atualizar
             </Text>
-
         </TouchableOpacity>
-
     }
         data={medicamentos}
         keyExtractor={(item) => item.id}
@@ -220,7 +165,7 @@ async function verificarHorario(){
                         [
                         {
                             text: 'Editar',
-                            onPress:() => editarMed(item.id, item.nome, item.horario)
+                            onPress:() => navigation.navigate('EditarMedicamento', {medicamento: item})
                         },
                         {
                             text:'Excluir',

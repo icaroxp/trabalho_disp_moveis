@@ -4,6 +4,7 @@ import Alertas from "../pages/alertas";
 import { Ionicons } from "@expo/vector-icons";
 import CadastroMedicamentos from "../pages/cadastroMedicamentos";
 import CadastroCuidador from '../pages/integrarCuidador'
+import EditarMedicamento from '../pages/editarMedicamentos'
 
 const Tab = createBottomTabNavigator();
 export default function TabRoutes(){
@@ -84,11 +85,20 @@ export default function TabRoutes(){
             component={CadastroCuidador}
             />
 
-            
-
+        <Tab.Screen
+        name="EditarMedicamento"
+        component={EditarMedicamento}
+        options={{
+            tabBarButton: () => null,
+            tabBarStyle: { display: 'none' }
+            }}
+        />
             
 
         </Tab.Navigator>
+
+        
+        
     )
 
 }
