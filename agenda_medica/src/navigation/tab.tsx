@@ -1,6 +1,5 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Home from '../pages/Home'
-import Alertas from "../pages/alertas";
 import { Ionicons } from "@expo/vector-icons";
 import CadastroMedicamentos from "../pages/cadastroMedicamentos";
 import CadastroCuidador from '../pages/integrarCuidador'
@@ -67,19 +66,7 @@ export default function TabRoutes(){
                 )
             }}
             />
-            <Tab.Screen
-            name="Alertas"
-            component={Alertas}
-            options={{
-                tabBarIcon: ({color, size}) => (
-                <Ionicons
-                name="alert"
-                size={size}
-                color={color}
-                />
-                )
-            }}
-            />
+
             <Tab.Screen
             name="CadastroCuidador"
             component={CadastroCuidador}
