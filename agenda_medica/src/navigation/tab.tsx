@@ -9,32 +9,34 @@ const Tab = createBottomTabNavigator();
 export default function TabRoutes(){
 
     return(
-        
-        <Tab.Navigator screenOptions={{
+    
+        <Tab.Navigator
+  screenOptions={{
+    headerShown: false,
 
-        tabBarStyle: {
-            backgroundColor: '#000',
-            height: 70,
-        },
-        tabBarActiveTintColor: '#fff',
+    tabBarStyle: {
+      backgroundColor: '#000',
+      height: 70,
+    },
 
-        tabBarInactiveTintColor: '#999',
-        tabBarLabelStyle: {
-            fontSize: 12,
+    tabBarActiveTintColor: '#fff',
+    tabBarInactiveTintColor: '#999',
 
-            backgroundColor:'000'
-        },
-        tabBarItemStyle: {
-            justifyContent: 'center',
-            alignItems: 'center',
-        },
-        
+    tabBarLabelStyle: {
+      fontSize: 12,
+      textAlign: 'center',
+    },
 
+    tabBarItemStyle: {
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
 
-
-
-
-    }}>     
+    tabBarIconStyle: {
+      alignSelf: 'center',
+    },
+  }}
+>     
     {/* Barra de navegação */}
 
             <Tab.Screen
@@ -67,25 +69,23 @@ export default function TabRoutes(){
             }}
             />
 
-            <Tab.Screen
-            name="CadastroCuidador"
-            component={CadastroCuidador}
+<Tab.Screen
+    name="CadastroCuidador"
+    component={CadastroCuidador}
+    options={{
+        tabBarLabel: 'Cuidador',
+        tabBarIcon: ({ color, size }) => (
+            <Ionicons
+                name="people"
+                size={size}
+                color={color}
             />
+        )
+    }}
+/>
 
-        <Tab.Screen
-        name="EditarMedicamento"
-        component={EditarMedicamento}
-        options={{
-            tabBarButton: () => null,
-            tabBarStyle: { display: 'none' }
-            }}
-        />
-            
 
-        </Tab.Navigator>
-
-        
-        
+        </Tab.Navigator> 
     )
 
 }
