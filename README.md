@@ -9,8 +9,6 @@ Vinicius Fonseca Gorito Adriano, matrícula: 202302453813;
 Ester de Souza Xavier, matrícula: 202303263228;
 Matheus Luis Silva Passos, matrícula: 202303348541; 
 
-
-
 ## Funcionalidades
 
 - Cadastro de medicamentos
@@ -51,5 +49,16 @@ O cuidador pode:
 - Vincular pacientes através do e-mail
 - Visualizar medicamentos do paciente
 - Acompanhar horários de medicação
+
+
+
+
+###Para rodar o projeto você deve:
+Ter instalado os Node.js;
+Copie o projeto para o computador utilizando o git clone (link  do projeto);
+Abra o vscode na pasta do projeto;
+Utilize o comando npm install para que as dependências do package.json sejam instaladas;
+Para rodar o  projeto, podemos utilizar o npx expo start ou npx expo start --tunnel (caso acesse o projeto  pelo celular e o computador esteja em outra rede).
+
 
 
